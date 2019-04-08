@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function custom_overriding_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
+  // Add a new textfile in Site-information page and set its bvalue in variable siteapikey.	
   if ($form_id == 'system_site_information_settings') {
 
   	$data = \Drupal::state()->get('siteapikey');
@@ -35,7 +36,10 @@ function custom_overriding_form_alter(&$form, FormStateInterface $form_state, $f
 	$form['#submit'][] = '_custom_overriding_form_custom_submit';
   }
 }
-
+/**
+ * Validate form submissions.
+ * _custom_overriding_form_custom_validate()
+ */
 function _custom_overriding_form_custom_validate($form, FormStateInterface $form_state){
 	$api_value = $form_state->getValue('site_api_key');
 	if($api_value == 'No API Key yet'){
@@ -44,7 +48,8 @@ function _custom_overriding_form_custom_validate($form, FormStateInterface $form
 }
 
 /**
- * Make the form go to route.id.
+ * custom form submissions.
+ * _custom_overriding_form_custom_submit()
  */
 function _custom_overriding_form_custom_submit($form, FormStateInterface $form_state){
 	$api_value = $form_state->getValue('site_api_key');
