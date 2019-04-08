@@ -1,0 +1,7 @@
+custom_overriding.content:
+  path: '/page_json/response/{id}'
+  defaults:
+    _controller: 'Drupal\custom_overriding\Controller\DisplayController::display'
+    _title: 'Node response'
+  requirements:
+    _permission: 'access content'

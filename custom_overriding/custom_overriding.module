@@ -1,0 +1,53 @@
+<?php
+/*
+ * @file
+ * code for custom_overriding module
+*/
+
+use Drupal\Core\Form\FormStateInterface;
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_overriding_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  if ($form_id == 'system_site_information_settings') {
+
+  	$data = \Drupal::state()->get('siteapikey');
+
+  	$form['actions']['submit']['#value'] = t('Update Configuration');
+
+	$form['site_api_key_fieldset'] = array(
+		'#type' => 'details',
+      	'#title' => t("Site API Key"),
+      	'#open' => TRUE,
+	);
+	
+	$form['site_api_key_fieldset']['site_api_key'] = array(
+		'#type' => 'textfield',
+		'#title' => t("Site API Key"),
+		'#description' => t('Site API Key.'),
+		'#required' => TRUE,
+		'#default_value' => !empty($data) ? $data : t('No API Key yet'),
+	);
+	$form['#validate'][] = '_custom_overriding_form_custom_validate';
+	$form['#submit'][] = '_custom_overriding_form_custom_submit';
+  }
+}
+
+function _custom_overriding_form_custom_validate($form, FormStateInterface $form_state){
+	$api_value = $form_state->getValue('site_api_key');
+	if($api_value == 'No API Key yet'){
+		$form_state->setErrorByName('site_api_key', t('Please create Site API key.'));
+	}
+}
+
+/**
+ * Make the form go to route.id.
+ */
+function _custom_overriding_form_custom_submit($form, FormStateInterface $form_state){
+	$api_value = $form_state->getValue('site_api_key');
+	\Drupal::state()->set('siteapikey', $api_value);
+    drupal_set_message(t('Site API Key has been saved with %string.', array('%string' => $api_value)));
+}

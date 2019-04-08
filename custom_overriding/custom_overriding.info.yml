@@ -1,0 +1,5 @@
+name: Custom overriding
+description: A module to override module and theme behaviour.
+core: 8.x
+package: Custom
+type: module
